@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -11,11 +10,29 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  Future<void> getlocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getlocation();
+  // }
+
+  // Future<void> getlocation() async {
+    // ignore: unused_local_variable
+  //   Future<Position> position =
+  //     (await  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low)) as Future<Position>;
+
+  // }
+  var locationMessage = "";
+  void getCurrentlocation() async {
+    // ignore: unused_local_variable
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var lastPosition = await Geolocator.getLastKnownPosition();
     // ignore: avoid_print
-    print(position);
+    print(lastPosition);
+    setState(() {
+      locationMessage = "$position.latitude , $position.longitude";
+    });
   }
 
   @override
@@ -24,7 +41,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       body: Center(
         child: RaisedButton(
           onPressed: () {
-            //Get the current location
+            getCurrentlocation();
           },
           child: const Text('Get Location'),
         ),
