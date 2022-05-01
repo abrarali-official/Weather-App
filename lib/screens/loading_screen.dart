@@ -1,15 +1,28 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
+import 'location_screen.dart';
+import 'package:weather/services/weather.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
 
   @override
-  _LoadingScreenState createState() => _LoadingScreenState();
+  State<StatefulWidget> createState() {
+    return _LoadingScreenState();
+  }
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getLocationData();
+    _determinePosition();
+  }
+
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -47,38 +60,115 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
-  var locationMessage = "";
-  void getCurrentlocation() async {
-    // ignore: unused_local_variable
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    var lastPosition = await Geolocator.getLastKnownPosition();
-    // ignore: avoid_print
-    print(lastPosition);
-    setState(() {
-      locationMessage = "$position.latitude , $position.longitude";
-    });
+  void getLocationData() async {
+    var weatherData = await WeatherModel().getLocationWeather();
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen(
+        locationWeather: weatherData,
+      );
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            getCurrentlocation();
-            _determinePosition();
-          },
-          child: const Text('Get Location'),
+        child: SpinKitDoubleBounce(
+          color: Colors.white,
+          size: 100.0,
         ),
       ),
     );
   }
 }
 
-// exception handler 
 
-// try {
-// if program does not run in try tag than tha alternative code in catch tag run 
-// } catch (e) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // ignore_for_file: deprecated_member_use, avoid_print
+
+// import 'package:flutter/material.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:weather/services/location.dart';
+
+// const apikey = 'f3f5842b11f40979f570c670af442434';
+
+// class LoadingScreen extends StatefulWidget {
+//   const LoadingScreen({Key? key}) : super(key: key);
+
+//   @override
+//   _LoadingScreenState createState() => _LoadingScreenState();
 // }
+
+// class _LoadingScreenState extends State<LoadingScreen> {
+//   late double latitude;
+//   late double longitude;
+//   @override
+//   void initState() {
+//     super.initState();
+//     _determinePosition();
+//     getCurrentlocation();
+//     print("This code is running");
+//     getData();
+//   }
+
+
+//   void getData() async {
+//     latitude = location.latit;
+
+//     http.Response response = await http.get(Uri(
+//         host:
+//             'https://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=$apikey'));
+
+//     if (response.statusCode == 200) {
+//       String data = response.body;
+//       print(data);
+//     } else {
+//       print(response.statusCode);
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child: RaisedButton(
+//           onPressed: () {
+//             _determinePosition();
+//             getCurrentlocation();
+//           },
+//           child: const Text('Get Location'),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+// // exception handler 
+
+// // try {
+// // if program does not run in try tag than tha alternative code in catch tag run 
+// // } catch (e) {
+// // }
